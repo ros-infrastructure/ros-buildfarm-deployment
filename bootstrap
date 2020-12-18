@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Bootstrap the setup of chef on the current host.
+
+set -o errexit -o pipefail -o nounset
+
+if [ "$EUID" -ne 0 ]; then
+	echo "This script must be run as root."
+	exit 1
+fi
+
+# Source configuration file
+config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
+if [ ! -r "$config_file" ]; then
+	echo "Could not read configuration file '$config_file'."
+	echo "Copy one from '${config_file}.example'."
+	exit 1
+fi
+
+. "$config_file"
+
+echo "Installing curl and git"
+apt-get update
+apt-get install -y curl git
+
+# Create a tempfile so the user has the opportunity to review the omnitruck script.
+omnitruck_script="$(mktemp --suffix=.bash)"
+curl -L 'https://omnitruck.cinc.sh/install.sh' > "$omnitruck_script"
+
+echo "This script uses the omnitruck installation from the https://cinc.sh"
+echo "The omnitruck install script has been downloaded to $omnitruck_script"
+echo "You may wish to review the script in another terminal before running it"
+read -rsp "Press enter to run the installation script or ^C to exit." _discard
+
+CHEF_VERSION="${CHEF_VERSION:=15}"
+bash "$omnitruck_script" -v "$CHEF_VERSION"
+echo "Chef bootstrap complete"

@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+set -o errexit -o pipefail -o nounset
+
+# Source configuration file
+config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
+if [ ! -r "$config_file" ]; then
+	echo "Could not read configuration file '$config_file'."
+	echo "Copy one from '${config_file}.example'."
+	exit 1
+fi
+. "$config_file"
+
+
+usage() {
+	cat <<EOF
+$0 [CHEF_REPO CHEF_ENVIRONMENT CHEF_SOLO_FILE]
+	Configure the current host using chef-solo.
+
+	CHEF_REPO the url of the chef configuration repository.
+	CHEF_ENVIRONMENT the chef environment for this host.
+	CHEF_SOLO_FILE the node template for this host, relative to the CHEF_REPO root.
+
+	Arguments may be specified in order as above or as environment variables in any order:
+	env CHEF_REPO='git@github.com:ros-infrastructure/chef-ros-buildfarm' CHEF_ENVIRONMENT=staging CHEF_SOLO_FILE='solo/jenkins.json' $0
+
+	When first run, all arguments must be specified or pre-populated in '$config_file'.
+	Subsequent runs will use argument values saved in '$config_file'.
+EOF
+}
+
+save_configuration() {
+	cat <<CONFIGURATION > "$config_file"
+CHEF_VERSION=$CHEF_VERSION
+CHEF_REPO=$CHEF_REPO
+CHEF_BRANCH=$CHEF_BRANCH
+CHEF_ENVIRONMENT=$CHEF_ENVIRONMENT
+CHEF_SOLO_FILE=$CHEF_SOLO_FILE
+CONFIGURATION
+}
+
+freshen_chef_repo() {
+	if [ ! -d chef_repo ]; then
+		git clone "$CHEF_REPO" -b "$CHEF_BRANCH" --recurse-submodules --remote-submodules chef_repo
+	else
+		pushd chef_repo
+		git fetch origin
+		git reset --hard origin/$CHEF_BRANCH
+		git submodule update --init --remote --recursive
+		popd
+	fi
+}
+
+# Check for valid configuration values or command line arguments
+if [ (-z "$CHEF_REPO" -o -z "$CHEF_BRANCH" -o -z "$CHEF_ENVIRONMENT" -o -z "$CHEF_SOLO_FILE") -a $# -ne 4 ]; then
+	usage
+	exit 1
+fi
+
+# Fresh CLI args will override configured values
+CHEF_REPO="${1:=$CHEF_REPO}"
+CHEF_BRANCH="${2:=$CHEF_BRANCH}"
+CHEF_ENVIRONMENT="${3:=$CHEF_ENVIRONMENT}"
+CHEF_SOLO_FILE="${4:=$CHEF_SOLO_FILE}"
+
+save_configuration
+
+freshen_chef_repo
+
+cd chef_repo
+wd="$(pwd)"
+exec cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
