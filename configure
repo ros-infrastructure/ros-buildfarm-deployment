@@ -51,17 +51,17 @@ freshen_chef_repo() {
 	fi
 }
 
-# Check for valid configuration values or command line arguments
-if test $# -ne 4 && test -z "$CHEF_REPO" || test -z "$CHEF_BRANCH" || test -z "$CHEF_ENVIRONMENT" || test -z "$CHEF_SOLO_FILE"; then
-	usage
-	exit 1
-fi
-
 # Fresh CLI args will override configured values
 CHEF_REPO="${1:-$CHEF_REPO}"
 CHEF_BRANCH="${2:-$CHEF_BRANCH}"
 CHEF_ENVIRONMENT="${3:-$CHEF_ENVIRONMENT}"
 CHEF_SOLO_FILE="${4:-$CHEF_SOLO_FILE}"
+
+# Check for valid configuration values or command line arguments
+if test $# -ne 4 && test -z "$CHEF_REPO" || test -z "$CHEF_BRANCH" || test -z "$CHEF_ENVIRONMENT" || test -z "$CHEF_SOLO_FILE"; then
+	usage
+	exit 1
+fi
 
 save_configuration
 
