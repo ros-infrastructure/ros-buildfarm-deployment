@@ -27,10 +27,12 @@ apt-get install -y curl git
 omnitruck_script="$(mktemp --suffix=.bash)"
 curl -L 'https://omnitruck.cinc.sh/install.sh' > "$omnitruck_script"
 
-echo "This script uses the omnitruck installation from the https://cinc.sh"
-echo "The omnitruck install script has been downloaded to $omnitruck_script"
-echo "You may wish to review the script in another terminal before running it"
-read -rsp "Press enter to run the installation script or ^C to exit." _discard
+if [ -z "$RUN_OMNITRUCK" ]; then
+	echo"This script uses the omnitruck installation from the https://cinc.sh"
+	echo "The omnitruck install script has been downloaded to $omnitruck_script"
+	echo "You may wish to review the script in another terminal before running it"
+	read -rsp "Press enter to run the installation script or ^C to exit." _discard
+fi
 
 CHEF_VERSION="${CHEF_VERSION:=15}"
 bash "$omnitruck_script" -v "$CHEF_VERSION"
