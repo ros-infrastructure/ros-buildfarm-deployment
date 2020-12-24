@@ -58,10 +58,10 @@ if test $# -ne 4 && test -z "$CHEF_REPO" || test -z "$CHEF_BRANCH" || test -z "$
 fi
 
 # Fresh CLI args will override configured values
-CHEF_REPO="${1:=$CHEF_REPO}"
-CHEF_BRANCH="${2:=$CHEF_BRANCH}"
-CHEF_ENVIRONMENT="${3:=$CHEF_ENVIRONMENT}"
-CHEF_SOLO_FILE="${4:=$CHEF_SOLO_FILE}"
+CHEF_REPO="${1:-$CHEF_REPO}"
+CHEF_BRANCH="${2:-$CHEF_BRANCH}"
+CHEF_ENVIRONMENT="${3:-$CHEF_ENVIRONMENT}"
+CHEF_SOLO_FILE="${4:-$CHEF_SOLO_FILE}"
 
 save_configuration
 
