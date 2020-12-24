@@ -52,7 +52,7 @@ freshen_chef_repo() {
 }
 
 # Check for valid configuration values or command line arguments
-if [ (-z "$CHEF_REPO" -o -z "$CHEF_BRANCH" -o -z "$CHEF_ENVIRONMENT" -o -z "$CHEF_SOLO_FILE") -a $# -ne 4 ]; then
+if test $# -ne 4 && test -z "$CHEF_REPO" || test -z "$CHEF_BRANCH" || test -z "$CHEF_ENVIRONMENT" || test -z "$CHEF_SOLO_FILE"; then
 	usage
 	exit 1
 fi
