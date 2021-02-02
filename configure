@@ -68,5 +68,4 @@ save_configuration
 freshen_chef_repo
 
 cd chef_repo
-wd="$(pwd)"
-exec cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
+sudo cinc-solo -c "${PWD}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${PWD}/${CHEF_SOLO_FILE}"
