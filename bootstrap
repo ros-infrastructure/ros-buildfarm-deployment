@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Bootstrap the setup of chef on the current host.
 
