@@ -4,13 +4,15 @@
 
 set -o errexit -o nounset
 
+script_directory=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
 if [ "$(id -u)" -ne 0 ]; then
 	echo "This script must be run as root."
 	exit 1
 fi
 
 # Source configuration file
-config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
+config_file="${script_directory}/configuration.bash"
 if [ ! -r "$config_file" ]; then
 	echo "Could not read configuration file '$config_file'."
 	echo "Copy one from '${config_file}.example'."

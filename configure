@@ -3,7 +3,9 @@
 set -o errexit -o nounset
 
 # Source configuration file
-config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
+script_directory=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
+config_file="${script_directory}/configuration.bash"
 if [ ! -r "$config_file" ]; then
 	echo "Could not read configuration file '$config_file'."
 	echo "Copy one from '${config_file}.example'."
