@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-set -o errexit -o pipefail -o nounset
+set -o errexit -o nounset
 
 # Source configuration file
 config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
