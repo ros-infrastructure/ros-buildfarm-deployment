@@ -21,9 +21,11 @@ fi
 
 . "$config_file"
 
-echo "Installing curl and git"
-apt-get update
-apt-get install -y curl git
+if command -v apt-get; then
+	echo "Installing curl and git"
+	apt-get update
+	apt-get install -y curl git
+fi
 
 # Create a tempfile so the user has the opportunity to review the omnitruck script.
 omnitruck_script="$(mktemp)"
