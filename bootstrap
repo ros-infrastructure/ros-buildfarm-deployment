@@ -26,7 +26,8 @@ apt-get update
 apt-get install -y curl git
 
 # Create a tempfile so the user has the opportunity to review the omnitruck script.
-omnitruck_script="$(mktemp --suffix=.bash)"
+omnitruck_script="$(mktemp)"
+mv "$omnitruck_script" "${omnitruck_script}.bash"
 curl -L 'https://omnitruck.cinc.sh/install.sh' > "$omnitruck_script"
 
 if [ -z "${RUN_OMNITRUCK:-}" ]; then
