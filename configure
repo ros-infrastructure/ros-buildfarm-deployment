@@ -45,11 +45,12 @@ freshen_chef_repo() {
 	if [ ! -d chef_repo ]; then
 		git clone "$CHEF_REPO" -b "$CHEF_BRANCH" --recurse-submodules --remote-submodules chef_repo
 	else
-		pushd chef_repo
+		CURDIR="$(pwd)"
+		cd chef_repo
 		git fetch origin
-		git reset --hard origin/$CHEF_BRANCH
+		git reset --hard "origin/$CHEF_BRANCH"
 		git submodule update --init --remote --recursive
-		popd
+		cd "$CURDIR"
 	fi
 }
 
