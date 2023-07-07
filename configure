@@ -76,4 +76,4 @@ echo "$( date "+%Y-%m-%d %H:%M:%S"):  $(git rev-parse --short HEAD)" >> "../CHEF
 popd 
 
 # Remove chef repository after configuration
-sudo rm -r chef_repo
+rm -r -f chef_repo
