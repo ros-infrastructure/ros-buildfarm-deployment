@@ -72,7 +72,7 @@ wd="$(pwd)"
 cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
 
 # Write date + commit SHA to a changelog
-echo "$( date "+%Y-%m-%d %H:%M:%S"):  $(git rev-parse --short HEAD)" >> "../CHEF_CHANGELOG.txt"; 
+echo "$( date "+%Y-%m-%d %H:%M:%S"):  $(git rev-parse --short HEAD)" >> "../CHEF_COMMITLOG.txt"; 
 popd 
 
 # Remove chef repository after configuration
