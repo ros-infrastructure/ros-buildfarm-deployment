@@ -67,6 +67,13 @@ save_configuration
 
 freshen_chef_repo
 
-cd chef_repo
+pushd chef_repo
 wd="$(pwd)"
-exec cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
+cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
+
+# Write date + commit SHA to a changelog
+echo "$( date "+%Y-%m-%d %H:%M:%S"):  $(git rev-parse --short HEAD)" >> "../CHEF_COMMITLOG.txt"; 
+popd 
+
+# Remove chef repository after configuration
+rm -r -f chef_repo
