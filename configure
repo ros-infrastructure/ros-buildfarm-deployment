@@ -1,9 +1,11 @@
-#!/usr/bin/bash
+#!/bin/sh
 
-set -o errexit -o pipefail -o nounset
+set -o errexit -o nounset
 
 # Source configuration file
-config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
+script_directory=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
+config_file="${script_directory}/configuration.bash"
 if [ ! -r "$config_file" ]; then
 	echo "Could not read configuration file '$config_file'."
 	echo "Copy one from '${config_file}.example'."
@@ -43,11 +45,12 @@ freshen_chef_repo() {
 	if [ ! -d chef_repo ]; then
 		git clone "$CHEF_REPO" -b "$CHEF_BRANCH" --recurse-submodules --remote-submodules chef_repo
 	else
-		pushd chef_repo
+		CURDIR="$(pwd)"
+		cd chef_repo
 		git fetch origin
-		git reset --hard origin/$CHEF_BRANCH
+		git reset --hard "origin/$CHEF_BRANCH"
 		git submodule update --init --remote --recursive
-		popd
+		cd "$CURDIR"
 	fi
 }
 
