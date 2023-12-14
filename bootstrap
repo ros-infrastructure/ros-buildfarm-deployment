@@ -4,9 +4,6 @@
 
 set -o errexit -o pipefail -o nounset
 
-echo $CHEF_VERSION
-echo $RUN_OMNITRUCK
-
 if [ "$EUID" -ne 0 ]; then
 	echo "This script must be run as root."
 	exit 1
@@ -37,6 +34,10 @@ if [ -z "${RUN_OMNITRUCK:-}" ]; then
 	read -rsp "Press enter to run the installation script or ^C to exit." _discard
 fi
 
-${CHEF_VERSION:=17}
+# If no chef version then defaults to 17
+CHEF_VERSION="${CHEF_VERSION:=17}"
+# Fresh arg will override configuration values
+CHEF_VERSION="${1:-$CHEF_VERSION}"
+
 bash "$omnitruck_script" -v "$CHEF_VERSION"
 echo "Chef bootstrap complete"
