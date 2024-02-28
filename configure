@@ -70,13 +70,13 @@ freshen_chef_repo
 pushd chef_repo
 wd="$(pwd)"
 
-cat "${wd}/data_bags/ros_buildfarm_repository_signing_keys/staging.json.mage"
+#cat "${wd}/data_bags/ros_buildfarm_repository_signing_keys/staging.json.mage"
 
 # Decrypt databags
-export MAGE_AGE_CMD="${wd}/mage/age/age"
-/opt/cinc/embedded/bin/ruby "${wd}/mage/mage.rb" -c "${wd}/mage/mage.yml" -P staging-repo -d
+#export MAGE_AGE_CMD="${wd}/mage/age/age"
+#/opt/cinc/embedded/bin/ruby "${wd}/mage/mage.rb" -c "${wd}/mage/mage.yml" -P staging-repo -d
 
-cat "${wd}/data_bags/ros_buildfarm_repository_signing_keys/staging.json"
+#cat "${wd}/data_bags/ros_buildfarm_repository_signing_keys/staging.json"
 
 # Run configuration
 cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
