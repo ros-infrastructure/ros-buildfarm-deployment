@@ -72,10 +72,9 @@ wd="$(pwd)"
 
 # Decrypt databags
 export MAGE_AGE_CMD="${wd}/mage/age/age"
-/opt/chef/embedded/bin/ruby ./mage/mage.rb -c mage/mage.yml -P staging-repo -d
-
+#/opt/chef/embedded/bin/ruby ./mage/mage.rb -c mage/mage.yml -P staging-repo -d
 # Run configuration
-cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
+#cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
 
 # Write date + commit SHA to a changelog
 echo "$( date "+%Y-%m-%d %H:%M:%S"):  $(git rev-parse --short HEAD)" >> "../CHEF_COMMITLOG.txt"; 
