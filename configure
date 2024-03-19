@@ -51,11 +51,22 @@ freshen_chef_repo() {
 	fi
 }
 
+decrypt_secrets() {
+	# TODO: add multiplatform binary support
+	mage="${wd}/mage"
+	export MAGE_AGE_CMD="${mage}/age/age"
+
+	ruby_executable="/opt/cinc/embedded/bin/ruby"
+
+	$ruby_executable "${mage}/mage.rb" -c "${mage}/mage.yml" -P "$CHEF_MAGE_PROFILE" -d
+} 
+
 # Fresh CLI args will override configured values
 CHEF_REPO="${1:-$CHEF_REPO}"
 CHEF_BRANCH="${2:-$CHEF_BRANCH}"
 CHEF_ENVIRONMENT="${3:-$CHEF_ENVIRONMENT}"
 CHEF_SOLO_FILE="${4:-$CHEF_SOLO_FILE}"
+CHEF_MAGE_PROFILE="${5:-$CHEF_MAGE_PROFILE}"
 
 # Check for valid configuration values or command line arguments
 if test $# -ne 4 && test -z "$CHEF_REPO" || test -z "$CHEF_BRANCH" || test -z "$CHEF_ENVIRONMENT" || test -z "$CHEF_SOLO_FILE"; then
@@ -69,6 +80,11 @@ freshen_chef_repo
 
 pushd chef_repo
 wd="$(pwd)"
+
+if test -n "$CHEF_MAGE_PROFILE" && test -n "$MAGE_KEY" ; then
+	decrypt_secrets
+fi
+
 cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
 
 # Write date + commit SHA to a changelog

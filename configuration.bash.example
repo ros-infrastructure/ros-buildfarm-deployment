@@ -3,4 +3,5 @@ CHEF_REPO=
 CHEF_BRANCH=
 CHEF_ENVIRONMENT=
 CHEF_SOLO_FILE=
-
+# Optional, used for decryption purposes
+CHEF_MAGE_PROFILE=
