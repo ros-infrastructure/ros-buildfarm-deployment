@@ -84,6 +84,9 @@ wd="$(pwd)"
 
 if test -n "$CHEF_MAGE_PROFILE" && test -n "$MAGE_KEY" ; then
 	decrypt_secrets
+else
+	echo "CHEF_MAGE_PROFILE or MAGE_KEY is not set, and are necessary to perform decryption."
+	exit 1
 fi
 
 cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
