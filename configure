@@ -53,13 +53,8 @@ freshen_chef_repo() {
 }
 
 decrypt_secrets() {
-	# TODO: add multiplatform binary support
 	mage="${wd}/mage"
-	export MAGE_AGE_CMD="${mage}/age/age"
-
-	ruby_executable="/opt/cinc/embedded/bin/ruby"
-
-	$ruby_executable "${mage}/mage.rb" -c "${mage}/mage.yml" -P "$CHEF_MAGE_PROFILE" -d
+	MAGE_KEY=$MAGE_KEY "${mage}/mage.sh" -c "${mage}/mage.yml" -P "$CHEF_MAGE_PROFILE" -d
 } 
 
 # Fresh CLI args will override configured values
