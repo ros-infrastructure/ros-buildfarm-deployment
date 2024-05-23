@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+MAGE_KEY=
 set -o errexit -o pipefail -o nounset
 
 # Source configuration file
