@@ -1,6 +1,5 @@
 #!/usr/bin/bash
-MAGE_KEY=
-set -o errexit -o pipefail -o nounset
+set -o errexit -o pipefail
 
 # Source configuration file
 config_file="$(dirname "${BASH_SOURCE[0]}")/configuration.bash"
