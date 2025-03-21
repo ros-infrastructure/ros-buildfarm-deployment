@@ -76,9 +76,11 @@ freshen_chef_repo
 pushd chef_repo
 wd="$(pwd)"
 
-if test \( -n "$CHEF_MAGE_PROFILE" -a -z "$MAGE_KEY" \) -o \( -z "$CHEF_MAGE_PROFILE" -a -n "$MAGE_KEY" \); then 
-		echo "CHEF_MAGE_PROFILE or MAGE_KEY is not set, and are necessary to perform decryption."
+if test \( -n "$CHEF_MAGE_PROFILE" -a -z "$MAGE_KEY" \); then 
+		echo "MAGE_KEY is necessary to perform decryption of CHEF_MAGE_PROFILE."
 		exit 1
+elif test \( -z "$CHEF_MAGE_PROFILE" -a -n "$MAGE_KEY" \); then
+		echo "Warning: MAGE_KEY is set but no CHEF_MAGE_PROFILE was provided."
 fi
 
 if test -n "$CHEF_MAGE_PROFILE" && test -n "$MAGE_KEY" ; then
