@@ -16,7 +16,7 @@ usage() {
 $0 [-W|--why-run] [CHEF_REPO CHEF_ENVIRONMENT CHEF_SOLO_FILE]
 	Configure the current host using chef-solo.
 
-  -W|--why-run Run cinc-solo in why-run mode (dry run).
+	-W|--why-run Run cinc-solo in why-run mode (dry run).
 	CHEF_REPO the url of the chef configuration repository.
 	CHEF_ENVIRONMENT the chef environment for this host.
 	CHEF_SOLO_FILE the node template for this host, relative to the CHEF_REPO root.
