@@ -13,9 +13,10 @@ fi
 
 usage() {
 	cat <<EOF
-$0 [CHEF_REPO CHEF_ENVIRONMENT CHEF_SOLO_FILE]
+$0 [-W|--why-run] [CHEF_REPO CHEF_ENVIRONMENT CHEF_SOLO_FILE]
 	Configure the current host using chef-solo.
 
+  -W|--why-run Run cinc-solo in why-run mode (dry run).
 	CHEF_REPO the url of the chef configuration repository.
 	CHEF_ENVIRONMENT the chef environment for this host.
 	CHEF_SOLO_FILE the node template for this host, relative to the CHEF_REPO root.
@@ -56,6 +57,25 @@ decrypt_secrets() {
 	MAGE_KEY=$MAGE_KEY "${mage}/mage.sh" -c "${mage}/mage.yml" -P "$CHEF_MAGE_PROFILE" -d
 } 
 
+WHY_RUN_FLAG=""
+POSITIONAL_ARGS=()
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -W|--why-run)
+      WHY_RUN_FLAG="--why-run"
+      shift
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+
 # Fresh CLI args will override configured values
 CHEF_REPO="${1:-$CHEF_REPO}"
 CHEF_BRANCH="${2:-$CHEF_BRANCH}"
@@ -88,7 +108,7 @@ if test -n "$CHEF_MAGE_PROFILE" && test -n "$MAGE_KEY" ; then
 fi
 
 
-cinc-solo -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
+cinc-solo $WHY_RUN_FLAG -c "${wd}/.chef/solo.rb" -E "$CHEF_ENVIRONMENT" -j "${wd}/${CHEF_SOLO_FILE}"
 
 # Write date + commit SHA to a changelog
 echo "$( date "+%Y-%m-%d %H:%M:%S"):  $(git rev-parse --short HEAD)" >> "../CHEF_COMMITLOG.txt"; 
